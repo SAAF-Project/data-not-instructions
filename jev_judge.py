@@ -1,11 +1,27 @@
+#!/usr/bin/env -S uv run python
+# /// script
+# requires-python = ">=3.14"
+# dependencies = []
+# ///
+
+
 """jev_judge: ask TypeSafe's Jev whether a document carries a prompt injection.
 
 The regex scanner in ``data_not_instructions`` only knows English/Dutch wording
 and a few hiding tricks. This judge asks Jev small, atomic yes/no questions
 (Nouls) about the document and decides in code, so the logic stays auditable.
 
-    python jev_judge.py FILE [FILE...]      # verdict per file
-    python jev_judge.py --eval              # score every tests/fixtures/*.txt
+    ./jev_judge.py FILE [FILE...]           # verdict per file (shebang uses uv)
+    ./jev_judge.py --eval                   # score every tests/fixtures/*.txt
+    uv run jev_judge.py FILE [FILE...]      # same, without the executable bit
+    python jev_judge.py FILE [FILE...]      # plain Python 3.14+, stdlib only
+
+Without cloning (``uvx`` runs packages, not scripts; ``uv run`` takes a URL):
+
+    uv run https://raw.githubusercontent.com/SAAF-Project/data-not-instructions/main/jev_judge.py FILE
+
+A remote run has no ``tests/fixtures`` or ``.env`` beside it: pass files and
+set ``JEV`` or ``TYPESAFE_API_KEY`` in the environment; ``--eval`` won't work.
 
 API key: ``JEV`` or ``TYPESAFE_API_KEY`` from the environment or ``.env``.
 Stdlib only. A failed API call raises; it is never read as "clean".

@@ -112,7 +112,7 @@ If you have reviewed a line and accept it, add `# dni: ok` to that line to silen
 python3 -m unittest discover -s tests -v
 ```
 
-There are 18 tests. They cover nonce tags, fake closing tags, invisible characters, Dutch phrases, hidden HTML comments, requests for secrets, commands to run, false positives on normal audit and README wording, the poisoned and clean demo files, and the CI checker.
+There are 21 unit tests, plus a corpus test that runs every file in [`tests/fixtures/`](tests/fixtures/): files named `benign-*` must come back clean and every other file must be flagged. To add a case, drop a `.txt` file into that folder; CI enforces it automatically. The corpus currently has 36 files covering audit-verdict steering, fake roles and documents, hidden HTML/CSS/Markdown text, homoglyph and invisible-character obfuscation, base64 payloads, secret and system-prompt requests, data exfiltration through Markdown images, dangerous commands (reverse shells, `rm -rf`, encoded PowerShell), and harmless look-alikes such as licence headers, install guides, incident reports and training slides.
 
 To check any document by hand:
 
@@ -124,6 +124,9 @@ python3 data_not_instructions.py path/to/document.txt   # prints clean or SUSPIC
 
 - **This reduces prompt-injection risk; it does not remove it.** Delimiters and a system rule make injection much harder, but a determined attacker can still influence a model. Keep human review on every LLM-produced audit conclusion, and treat guard warnings as a reason for review.
 - **Phrase detection is a heuristic** (regular expressions in English and Dutch). Paraphrased, translated or image-based instructions will not be flagged, although they are still fenced as data.
+- **Quoted phrases are reported as notes, not warnings.** This lets incident reports and training material that quote an attack pass without a false alarm. An attacker could exploit this by putting an instruction in quotes; the text is still fenced as data, but the auditor gets no warning. Markdown image alt text and titles are never treated as quotes.
+- **Encoded payloads:** only base64 is decoded, and only one level deep. Hex, rot13 or nested encodings are not decoded, although a "decode … and follow it" instruction is still flagged.
+- **Commands are flagged by context.** `curl … | sh` in an install guide written for a human is not flagged; the same command addressed to the assistant or reviewer is.
 - **The guard sees only text.** Instructions inside images or scanned PDFs sent to a vision model are not scanned. Run OCR first and pass the text through `guard()`.
 - **The CI check is a Python-only static analysis** based on variable names (`text`, `report`, `policy`, `evidence`, ...). It can miss documents stored under other names. It can also flag f-strings that are not prompts, for example HTML report templates in the same file as an LLM call. Use `# dni: ok` for those.
 - **The guard does not validate model output.** Still check that referenced IDs and quoted evidence exist in the source document.

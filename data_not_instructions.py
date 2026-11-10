@@ -63,48 +63,123 @@ _TAG_LIKE = re.compile(r"<\s*/?\s*" + TAG, re.IGNORECASE)
 
 # (label, pattern). Kept deliberately readable so other teams can extend it.
 _PATTERNS: list[tuple[str, str]] = [
-    ("override", r"\b(ignore|disregard|forget|override)\b[^.\n]{0,40}\b(previous|prior|above|earlier|all|any|system)\b[^.\n]{0,20}\b(instructions?|rules?|prompts?|guidance)\b"),
-    ("override", r"\bnegeer\b[^.\n]{0,40}\b(vorige|eerdere|bovenstaande|alle)\b[^.\n]{0,20}\b(instructies?|regels?)\b"),
-    ("role-play", r"\byou are now\b|\bact as\b[^.\n]{0,30}\b(assistant|auditor|system)\b|\bje bent nu\b"),
-    ("role-play", r"\bfrom now on\b[^.\n]{0,20}\byou are\b|\bstay in character\b|\bpretend (to be|you are)\b|\bvanaf nu ben je\b"),
-    ("fake-role", r"(^|\n)\s*(system|assistant|human|user)\s*:|<\s*/?\s*(system|assistant|user|instructions?)\s*>"),
+    (
+        "override",
+        r"\b(ignore|disregard|forget|override)\b[^.\n]{0,40}\b(previous|prior|above|earlier|all|any|system)\b[^.\n]{0,20}\b(instructions?|rules?|prompts?|guidance)\b",
+    ),
+    (
+        "override",
+        r"\bnegeer\b[^.\n]{0,40}\b(vorige|eerdere|bovenstaande|alle)\b[^.\n]{0,20}\b(instructies?|regels?)\b",
+    ),
+    (
+        "role-play",
+        r"\byou are now\b|\bact as\b[^.\n]{0,30}\b(assistant|auditor|system)\b|\bje bent nu\b",
+    ),
+    (
+        "role-play",
+        r"\bfrom now on\b[^.\n]{0,20}\byou are\b|\bstay in character\b|\bpretend (to be|you are)\b|\bvanaf nu ben je\b",
+    ),
+    (
+        "fake-role",
+        r"(^|\n)\s*(system|assistant|human|user)\s*:|<\s*/?\s*(system|assistant|user|instructions?)\s*>",
+    ),
     ("fake-role", r"\[\s*(system|admin|developer|operator)\b[^\]\n]{0,200}\]"),
-    ("fake-document", r"(^|\n)\s*(document\s*\d+\s*\(|end of (the )?(document|report)|begin (new )?(instructions|task))"),
-    ("verdict-steering", r"\b(mark|classify|treat|rate|grade|score|conclude|report|consider|approve)\b[^.\n]{0,60}\b(as )?(sufficient|matched|compliant|effective|satisfactory|passed|low risk|accepted|no exceptions|fully (met|covered))\b"),
-    ("verdict-steering", r"\b(markeer|beoordeel|beschouw)\b[^.\n]{0,60}\b(voldoende|compliant|effectief|geen bevindingen)\b"),
-    ("suppression", r"\b(do not|don't|never|must not)\b[^.\n]{0,30}\b(report|list|mention|include|flag|raise)\b[^.\n]{0,40}\b(gaps?|findings?|exceptions?|issues?|deficienc\w*)\b"),
-    ("suppression", r"\breturn (an )?empty\b|\bno gaps? (should|must|need to) be (reported|listed)\b"),
-    ("addressed-to-ai", r"\b(note|message|instruction)s? (to|for) (the )?(ai|llm|model|assistant|agent|auditor bot|claude|gpt)\b"),
+    (
+        "fake-document",
+        r"(^|\n)\s*(document\s*\d+\s*\(|end of (the )?(document|report)|begin (new )?(instructions|task))",
+    ),
+    (
+        "verdict-steering",
+        r"\b(mark|classify|treat|rate|grade|score|conclude|report|consider|approve)\b[^.\n]{0,60}\b(as )?(sufficient|matched|compliant|effective|satisfactory|passed|low risk|accepted|no exceptions|fully (met|covered))\b",
+    ),
+    (
+        "verdict-steering",
+        r"\b(markeer|beoordeel|beschouw)\b[^.\n]{0,60}\b(voldoende|compliant|effectief|geen bevindingen)\b",
+    ),
+    (
+        "suppression",
+        r"\b(do not|don't|never|must not)\b[^.\n]{0,30}\b(report|list|mention|include|flag|raise)\b[^.\n]{0,40}\b(gaps?|findings?|exceptions?|issues?|deficienc\w*)\b",
+    ),
+    (
+        "suppression",
+        r"\breturn (an )?empty\b|\bno gaps? (should|must|need to) be (reported|listed)\b",
+    ),
+    (
+        "addressed-to-ai",
+        r"\b(note|message|instruction)s? (to|for) (the )?(ai|llm|model|assistant|agent|auditor bot|claude|gpt)\b",
+    ),
     ("addressed-to-ai", r"\b(beste|hallo|hoi|geachte)\s+(ai|llm|assistent|model)\b"),
     # Text a human reviewer never sees once Markdown/HTML is rendered.
     # HTML comments with words, except common boilerplate (licence headers, linter pragmas).
-    ("hidden-markup", r"<!--(?!\s*(SPDX-[\w-]+|Copyright|@license|eslint|prettier-ignore|markdownlint|TODO|FIXME)\b)(?:(?!-->)[\s\S])*?[A-Za-z]{2,}(?:(?!-->)[\s\S])*?-->"),
-    ("hidden-markup", r"<[^>]{0,200}style\s*=\s*[\"'][^\"']{0,200}(display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0|opacity\s*:\s*0(?![.\d]))"),
+    (
+        "hidden-markup",
+        r"<!--(?!\s*(SPDX-[\w-]+|Copyright|@license|eslint|prettier-ignore|markdownlint|TODO|FIXME)\b)(?:(?!-->)[\s\S])*?[A-Za-z]{2,}(?:(?!-->)[\s\S])*?-->",
+    ),
+    (
+        "hidden-markup",
+        r"<[^>]{0,200}style\s*=\s*[\"'][^\"']{0,200}(display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0|opacity\s*:\s*0(?![.\d]))",
+    ),
     # Markdown comments: [//]: # (text) / [comment]: # "text"
     ("hidden-markup", r"(^|\n)\s*\[(//|comment|_|#)\]:\s*#\s*[(\"'<]"),
     # Markdown image whose URL carries data to another host (renders = request = leak).
-    ("exfil-link", r"!\[[^\]]*\]\(\s*https?://[^)\s]*\?[^)\s]*(<[^>)]+>|\{[^})]+\}|\$\w+|\b(secret|key|token|password|data)\b)"),
+    (
+        "exfil-link",
+        r"!\[[^\]]*\]\(\s*https?://[^)\s]*\?[^)\s]*(<[^>)]+>|\{[^})]+\}|\$\w+|\b(secret|key|token|password|data)\b)",
+    ),
     # Attempts to make the agent leak secrets.
-    ("secret-request", r"\b(give|send|share|print|reveal|show|output|leak|tell|list|dump|email|post|paste|return|replace|include|insert|geef|stuur|toon|deel)\b[^.\n]{0,40}\b(api[ _-]?keys?|passwords?|passwd|tokens?|credentials?|secrets?|private[ _-]?keys?|env(ironment)?[ _-]?var\w*|wachtwoord\w*|sleutels?)\b"),
-    ("secret-request", r"\b(wachtwoord\w*|api-?sleutels?|inloggegevens)\b[^.\n]{0,80}\b(stuur|geef|deel|toon|plak|nodig)\b"),
-    ("secret-request", r"\b(output|print|reveal|show|repeat|share|give|send|display|dump|geef|toon|stuur)\b[^.\n]{0,40}\b(system ?prompt|systeemprompt|hidden instructions|initial instructions)\b"),
-    ("secret-request", r"~?/?\.ssh/id_\w+|\bid_(rsa|ed25519|ecdsa)\b|/etc/shadow\b|\.aws/credentials\b"),
+    (
+        "secret-request",
+        r"\b(give|send|share|print|reveal|show|output|leak|tell|list|dump|email|post|paste|return|replace|include|insert|geef|stuur|toon|deel)\b[^.\n]{0,40}\b(api[ _-]?keys?|passwords?|passwd|tokens?|credentials?|secrets?|private[ _-]?keys?|env(ironment)?[ _-]?var\w*|wachtwoord\w*|sleutels?)\b",
+    ),
+    (
+        "secret-request",
+        r"\b(wachtwoord\w*|api-?sleutels?|inloggegevens)\b[^.\n]{0,80}\b(stuur|geef|deel|toon|plak|nodig)\b",
+    ),
+    (
+        "secret-request",
+        r"\b(output|print|reveal|show|repeat|share|give|send|display|dump|geef|toon|stuur)\b[^.\n]{0,40}\b(system ?prompt|systeemprompt|hidden instructions|initial instructions)\b",
+    ),
+    (
+        "secret-request",
+        r"~?/?\.ssh/id_\w+|\bid_(rsa|ed25519|ecdsa)\b|/etc/shadow\b|\.aws/credentials\b",
+    ),
     # Attempts to make the agent run commands.
     # An imperative verb followed by a risky command; plain mentions of tools in docs do not count.
-    ("command-execution", r"\b(run|execute|exec|invoke|type|voer)\b[^.\n`]{0,20}`\s*(env|printenv|set|export|curl|wget|bash|sh|zsh|rm|powershell|nc|ssh|scp)\b[^`\n]*`"),
+    (
+        "command-execution",
+        r"\b(run|execute|exec|invoke|type|voer)\b[^.\n`]{0,20}`\s*(env|printenv|set|export|curl|wget|bash|sh|zsh|rm|powershell|nc|ssh|scp)\b[^`\n]*`",
+    ),
     # Text addressed to the assistant/reviewer that asks it to run something (same or next line).
-    ("command-execution", r"\b(assistant|ai|model|llm|agent|reviewer|auditor|claude|gpt)\b[^.\n]{0,80}\b(run|running|execute|executing|exec)\b[^.\n]{0,40}\n?\s*`?\s*(curl|wget|bash|sh|rm|powershell|nc|python3?|node)\b"),
+    (
+        "command-execution",
+        r"\b(assistant|ai|model|llm|agent|reviewer|auditor|claude|gpt)\b[^.\n]{0,80}\b(run|running|execute|executing|exec)\b[^.\n]{0,40}\n?\s*`?\s*(curl|wget|bash|sh|rm|powershell|nc|python3?|node)\b",
+    ),
     ("command-execution", r"\bprintenv\b|\bos\.environ\b|\bprocess\.env\b"),
     # Dangerous commands regardless of who they are addressed to.
-    ("command-execution", r"/dev/tcp/|\bnc\b[^\n]{0,40}\s-e\s|\bbash\s+-i\b|\bmkfifo\b"),
-    ("command-execution", r"\bpowershell(\.exe)?\b[^\n]{0,60}\s-(enc|encodedcommand|e)\b"),
+    (
+        "command-execution",
+        r"/dev/tcp/|\bnc\b[^\n]{0,40}\s-e\s|\bbash\s+-i\b|\bmkfifo\b",
+    ),
+    (
+        "command-execution",
+        r"\bpowershell(\.exe)?\b[^\n]{0,60}\s-(enc|encodedcommand|e)\b",
+    ),
     ("command-execution", r"\brm\s+-(rf|fr|r\s+-f|f\s+-r)\b"),
     # Payloads hidden in an encoding with an instruction to decode and act on them.
-    ("obfuscation", r"\bdecode\b[^.\n]{0,40}\b(base64|rot13|hex)\b[^.\n]{0,40}\b(follow|execute|run|obey|do)\b"),
+    (
+        "obfuscation",
+        r"\bdecode\b[^.\n]{0,40}\b(base64|rot13|hex)\b[^.\n]{0,40}\b(follow|execute|run|obey|do)\b",
+    ),
 ]
 # Labels that describe *wording*; a match fully inside quotation marks is reported as a
 # note (e.g. an incident report or training slide quoting an attack), not a warning.
-_QUOTABLE = {"override", "role-play", "verdict-steering", "suppression", "addressed-to-ai"}
+_QUOTABLE = {
+    "override",
+    "role-play",
+    "verdict-steering",
+    "suppression",
+    "addressed-to-ai",
+}
 _B64 = re.compile(r"[A-Za-z0-9+/]{40,}={0,2}")
 _COMPILED = [(label, re.compile(p, re.IGNORECASE)) for label, p in _PATTERNS]
 
@@ -116,13 +191,17 @@ class GuardedDocument:
     source: str
     wrapped: str
     warnings: list[str] = field(default_factory=list)
-    notes: list[str] = field(default_factory=list)  # quoted mentions: informational only
+    notes: list[str] = field(
+        default_factory=list
+    )  # quoted mentions: informational only
     invisible_chars_removed: int = 0
     tags_neutralised: int = 0
 
     @property
     def suspicious(self) -> bool:
-        return bool(self.warnings or self.invisible_chars_removed or self.tags_neutralised)
+        return bool(
+            self.warnings or self.invisible_chars_removed or self.tags_neutralised
+        )
 
 
 def sanitize(text: str) -> tuple[str, int, int]:
@@ -211,14 +290,12 @@ def _attr(value: str) -> str:
 def wrap(text: str, source: str = "document", nonce: str | None = None) -> str:
     """Wrap already-sanitised text in nonce-tagged untrusted-document tags."""
     nonce = nonce or secrets.token_hex(4)
-    return (
-        f'<{TAG}_{nonce} source="{_attr(source)}">\n'
-        f"{text}\n"
-        f"</{TAG}_{nonce}>"
-    )
+    return f'<{TAG}_{nonce} source="{_attr(source)}">\n{text}\n</{TAG}_{nonce}>'
 
 
-def guard(text: str, source: str = "document", nonce: str | None = None) -> GuardedDocument:
+def guard(
+    text: str, source: str = "document", nonce: str | None = None
+) -> GuardedDocument:
     """Sanitise, scan and wrap one untrusted document. The main entry point."""
     clean, invisible, tags = sanitize(text)
     warnings, notes = _scan(clean)

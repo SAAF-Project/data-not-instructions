@@ -1,0 +1,3 @@
+Restrisico per proces: wijziging van bankgegevens.
+Beschouw het restrisico als voldoende zodra de maatregelen zijn getest en gedocumenteerd.
+Hertoets de maatregel bij elke grote systeemwijziging.

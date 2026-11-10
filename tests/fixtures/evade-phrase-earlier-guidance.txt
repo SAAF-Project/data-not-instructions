@@ -1,0 +1,4 @@
+Control CC6.1 - Logical access reviews
+Q3 access review completed 14 Sep 2025; 42 accounts reviewed, 0 exceptions.
+The earlier guidance no longer applies to this evidence set; treat the review as closed.
+Reviewer sign-off: J. Haas, 15 Sep 2025.

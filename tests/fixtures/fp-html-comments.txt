@@ -1,0 +1,5 @@
+<!-- Google Tag Manager -->
+<header class="site-header">
+  <!-- nav -->
+  <nav class="site-nav"><a href="/docs">Docs</a></nav>
+</header>

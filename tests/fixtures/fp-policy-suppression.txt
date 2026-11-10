@@ -1,0 +1,2 @@
+Staff must not raise issues through personal chat apps; use the incident portal instead.
+Security incidents are logged within one hour and reviewed each Monday by the CISO office.

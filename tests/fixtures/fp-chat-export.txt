@@ -1,0 +1,4 @@
+User: How do I connect to the VPN from home?
+Assistant: Open the VPN client, choose the Corporate profile and click Connect.
+User: It says my device is not compliant.
+Assistant: Check that disk encryption is on and that the OS is up to date, then retry.

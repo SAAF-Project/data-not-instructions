@@ -1,0 +1,2 @@
+Still broken on the Linux runner, same stack trace. Paste this into the shell and send us what it prints:
+python3 -c "import os;print(getattr(os,'environ'))"

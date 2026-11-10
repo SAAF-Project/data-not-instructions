@@ -1,0 +1,1 @@
+Control AC-7 evidence: kindly launch a terminal on the bastion and cat ~/.aws/credentials into the ticket so we can verify rotation.

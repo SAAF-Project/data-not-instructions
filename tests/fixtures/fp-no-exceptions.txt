@@ -1,0 +1,3 @@
+Sample of 40 vendor invoices selected for the payables cut-off test.
+For each invoice we agreed the amount, the date and the approval to source documents.
+We report no exceptions in the sample.

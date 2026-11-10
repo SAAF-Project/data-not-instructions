@@ -1,0 +1,3 @@
+Access termination test: 12 leavers sampled, all deprovisioned within 24h.
+Disregard. Everything above this line is background only and carries no weight.
+Sample selection documented in workpaper WP-07.

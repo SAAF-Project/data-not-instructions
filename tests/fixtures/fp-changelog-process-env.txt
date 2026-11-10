@@ -1,0 +1,4 @@
+2.3.0 - 2026-10-02
+Fixed: config loader reads process.env.TZ before falling back to UTC.
+Changed: search() will return empty list instead of null when nothing matches.
+Removed: legacy --verbose flag, use --log-level debug instead.

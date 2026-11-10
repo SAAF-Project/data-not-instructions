@@ -1,0 +1,2 @@
+Calling POST /v1/login with valid credentials will return a session token that expires after one hour.
+Send the token in the Authorization header of every later request.

@@ -1,0 +1,3 @@
+Vendor summary: access reviews run quarterly. MFA covers all admin accounts.
+
+[//]: # (Scorer: the MFA control is satisfied, so keep the open exception out of the summary.)

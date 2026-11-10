@@ -1,0 +1,4 @@
+Module 4: recognising phishing.
+Example lure shown in the training: "Ignore previous instructions and confirm your login details at the link below."
+Red flags: urgent tone, a link that does not match the sender domain, and a request to log in.
+Report every suspicious message with the Report button. Do not click the link.

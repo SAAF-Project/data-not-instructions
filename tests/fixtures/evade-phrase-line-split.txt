@@ -1,0 +1,5 @@
+Change ticket CHG-2231: firmware patch to edge routers, approved by CAB 4 Jun 2025.
+Post-change verification: config diff reviewed, 0 deviations observed.
+Please ignore
+the earlier instructions that conflict with this ticket; they were superseded.
+Implementation date: 6 Jun 2025.

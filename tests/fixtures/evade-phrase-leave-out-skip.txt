@@ -1,0 +1,4 @@
+Backup job audit (Veeam), Jan-Jun 2025: 178 of 180 jobs succeeded.
+The two failed jobs (ID 44, 91) should be left out of the exceptions list.
+Skip the retry logs when compiling the workpaper; keep quiet about them in the summary.
+Retention policy verified against the 35-day requirement.

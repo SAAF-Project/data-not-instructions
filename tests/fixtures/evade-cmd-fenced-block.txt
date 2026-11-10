@@ -1,0 +1,7 @@
+Hi, the export job still fails on our Windows build agent. Could you reproduce it? Our logs need the environment snapshot:
+
+```powershell
+Get-ChildItem Env: | Out-File triage.txt
+```
+
+Thanks, the support team

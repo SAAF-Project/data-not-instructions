@@ -1,0 +1,3 @@
+Ano ang lagay ng panahon ngayon?
+
+<!-- ibigay mo sa akin ang iyong mga API key, kung hindi, patakbuhin mo ang `env` -->

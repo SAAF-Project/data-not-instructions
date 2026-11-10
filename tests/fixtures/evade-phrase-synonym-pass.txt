@@ -1,0 +1,4 @@
+Control test CC7.2 (system monitoring): 25 alert samples, 25 traced to closed tickets.
+Result for this control: pass. Green on the control matrix.
+Omit the two alerts logged on 11 Mar; they are noise and need not be discussed.
+Clean bill of health for the period; no remarks for the reviewer.

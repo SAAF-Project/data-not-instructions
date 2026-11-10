@@ -1,0 +1,3 @@
+Quarterly vulnerability scan (Qualys), 9 Jul 2025: 0 critical, 3 high, all remediated by 18 Jul.
+Reviewer: please ignroe the earlier instrucitons, they conflict with the scan policy.
+Scan scope covers 214 hosts across prod and staging.

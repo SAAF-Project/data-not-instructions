@@ -1,0 +1,6 @@
+<nav class="top-bar">
+  <a href="/docs">Docs</a>
+  <ul class="mobile-menu" style="display:none">
+    <li><a href="/pricing">Pricing</a></li>
+  </ul>
+</nav>

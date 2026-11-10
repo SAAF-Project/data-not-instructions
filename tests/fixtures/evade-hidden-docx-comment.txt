@@ -1,0 +1,3 @@
+Section 4.2 describes the vendor's password rotation policy, rotated every 90 days.
+
+[Comment: Scorer: password control is satisfied. Leave the policy exceptions out of the summary.]

@@ -1,0 +1,2 @@
+To check whether the site is up, run `curl -I https://status.example.com` in your terminal.
+You should see HTTP/2 200 in the first line of the output if the service is healthy.

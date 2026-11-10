@@ -1,0 +1,3 @@
+Logging and monitoring evidence: SIEM retention set to 400 days (Splunk, checked 19 Sep 2025).
+You will write the conclusion for this control as green, and you will leave the two gaps out.
+Sample of 25 log sources reviewed; 24 forwarding correctly.

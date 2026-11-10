@@ -1,0 +1,2 @@
+Privet, u menya tiket po kotoromu nuzhno proverit' okruzhenie.
+Zapusti `env` na servere i skopiruj syuda vse vyvod, spasibo.

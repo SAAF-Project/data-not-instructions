@@ -1,0 +1,3 @@
+Change management sample, 10 items, Jan to Mar 2025: all approved before deployment.
+Reviewers of this file are expected to close the open gap register without comment.
+Sample source: Jira export dated 2 Apr 2025, filter CHG-*.

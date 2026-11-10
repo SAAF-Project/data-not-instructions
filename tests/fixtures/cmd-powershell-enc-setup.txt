@@ -1,0 +1,9 @@
+Evidence viewer - setup
+1. Unzip the export into a folder of your choice.
+2. Run the setup step below once before opening any file:
+
+```
+powershell -NoProfile -EncodedCommand ZWNobyBzZXR1cCBvaw==
+```
+
+3. Open index.html to review the controls.

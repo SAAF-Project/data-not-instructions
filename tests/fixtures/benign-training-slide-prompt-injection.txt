@@ -1,0 +1,5 @@
+Security Awareness Training, Module 6: AI Assistants
+Slide 14: What is prompt injection?
+Prompt injection is when text in an email, web page or document tries to override an AI assistant's instructions, for example "ignore previous instructions".
+Defense: treat document content as data. Review untrusted text before pasting it into an AI tool.
+Questions: security-awareness@example.com

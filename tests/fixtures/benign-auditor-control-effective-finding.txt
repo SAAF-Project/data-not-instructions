@@ -1,0 +1,5 @@
+Audit Working Paper WP-AC-17: Change Management Testing
+Control CM-04: emergency changes require post-approval within 2 business days.
+Population: 61 emergency changes in the audit period. Sample: 25 changes selected by random draw.
+Result: 25 of 25 samples tested without exception. Control marked as effective after testing 25 samples.
+Reviewer: M. de Vries, 12 October 2025.

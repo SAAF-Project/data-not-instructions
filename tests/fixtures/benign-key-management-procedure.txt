@@ -1,0 +1,5 @@
+Key Management Procedure (KMP-03)
+
+Encryption keys for production databases are generated in the HSM and rotated annually.
+To retire a key, the key custodian disables it, confirms no active ciphertext depends on it, and then schedules destruction.
+Key rotation events are logged to the SIEM. Any key unused for 180 days is flagged for review by the security team.

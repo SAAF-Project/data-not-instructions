@@ -1,0 +1,7 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Release notes 2.4.0</title></head>
+<body>
+<h1>Release notes 2.4.0</h1>
+<p>Fixed a crash when the config file is empty.</p>
+</body></html>

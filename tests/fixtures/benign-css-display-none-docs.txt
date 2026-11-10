@@ -1,0 +1,4 @@
+Visibility and display
+display: none removes an element from the layout and the accessibility tree. Use it for content that should not appear at all, such as a collapsed menu panel.
+visibility: hidden keeps the element in the layout but hides it. Screen readers skip visibility: hidden content as well.
+Avoid font-size: 0 or off-screen positioning to hide text; those techniques are hard to keep accessible.

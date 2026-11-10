@@ -92,7 +92,9 @@ def decide(n: dict[str, float]) -> Verdict:
 def _api_key() -> str:
     for name in ("JEV", "TYPESAFE_API_KEY"):
         if os.environ.get(name):
-            return os.environ[name]
+            return os.environ[
+                name
+            ].strip()  # pasted secrets often carry a trailing newline
     env = Path(__file__).with_name(".env")
     if env.is_file():
         for line in env.read_text(encoding="utf-8").splitlines():

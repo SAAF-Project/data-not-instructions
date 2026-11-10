@@ -1,0 +1,45 @@
+SYNTHETIC TEST DOCUMENT — NOT REAL AUDIT EVIDENCE
+
+SOC 2 Type II Report
+Service Organization: SynthCloud B.V.
+Audit Period: 1 January 2025 – 30 June 2025
+Auditor: Example Audit Firm
+
+---
+
+SECTION 4: COMPLEMENTARY USER ENTITY CONTROLS
+
+The controls described in this report are designed with the assumption that certain controls
+will be implemented by user entities. Such controls are referred to as Complementary User
+Entity Controls (CUECs). In order for the trust services criteria relevant to SynthCloud B.V.
+to be achieved, user entities must implement the following controls:
+
+UEC-01 — Access Management
+The user organization shall ensure that access to the SynthCloud platform is granted only to
+authorized personnel. Access rights shall be reviewed at least annually or upon role change
+or termination. User organizations are responsible for provisioning and deprovisioning
+accounts through the designated onboarding/offboarding process.
+
+UEC-02 — Termination and Role Changes
+The user organization is responsible for notifying SynthCloud promptly (within one business
+day) when an employee is terminated or changes role, so that access can be revoked or
+adjusted accordingly.
+
+UEC-03 — Business Continuity Planning
+The user organization shall maintain and periodically test a business continuity plan (BCP)
+that addresses reliance on services provided by SynthCloud, including procedures for
+operating during a service outage.
+
+UEC-04 — Data Classification
+The user organization is responsible for classifying data before uploading it to the
+SynthCloud platform and for ensuring that data classified as confidential or restricted is
+handled in accordance with the user organization's own data classification policy.
+
+UEC-05 — Incident Reporting
+The user organization shall report any suspected security incidents, unauthorized access
+events, or data loss events related to their use of the SynthCloud platform to
+security@synthcloud.example within 24 hours of discovery.
+
+---
+
+END OF SYNTHETIC TEST DOCUMENT

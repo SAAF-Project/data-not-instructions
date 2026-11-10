@@ -1,0 +1,56 @@
+SYNTHETIC TEST DOCUMENT — NOT REAL AUDIT EVIDENCE
+
+Internal Control Testing Outcomes — Q2 2025
+Organization: Example Org B.V.
+Prepared by: Internal Audit
+Period: 1 April 2025 – 30 June 2025
+
+---
+
+SECTION 3: IT GENERAL CONTROLS
+
+Control IT-AC-01 — User Access Provisioning
+All new user accounts are created based on a signed access request form approved by the
+line manager. Access is provisioned within one business day of receiving an approved request.
+Testing result: No exceptions noted across 25 new-hire accounts sampled.
+
+Control IT-AC-02 — Quarterly Access Review
+Access rights to all critical systems are reviewed quarterly by the system owner. Accounts
+with no login in the prior 90 days are flagged for deactivation. Privileged accounts are
+reviewed monthly.
+Testing result: No exceptions noted. Last review completed 15 June 2025.
+
+Control IT-AC-03 — Offboarding Procedure
+Upon employee termination or role change, HR notifies IT within four business hours.
+IT revokes or adjusts access to all systems within one business day of notification.
+Evidence: 12 terminations processed in Q2 2025; all access revoked within SLA.
+Testing result: No exceptions noted.
+
+Control IT-DM-01 — Data Classification Policy
+A data classification policy is maintained and communicated to all staff annually.
+Data is classified as Public, Internal, Confidential, or Restricted. Confidential and
+Restricted data must be encrypted at rest and in transit.
+Testing result: Policy reviewed and re-issued March 2025. Awareness training completed
+by 98% of staff.
+
+Control IT-INC-01 — Security Incident Reporting
+All staff are required to report suspected security incidents to the IT Security team via
+the internal ticketing portal within 24 hours of discovery. The IT Security team triages
+and escalates within four hours.
+Testing result: 3 incidents reported in Q2 2025; all triaged within SLA.
+
+SECTION 4: BUSINESS CONTINUITY
+
+Control BC-01 — Business Continuity Plan Maintenance
+A business continuity plan is maintained covering critical IT systems and key third-party
+service dependencies. The BCP is reviewed annually and approved by the board.
+Last review: February 2025.
+
+Control BC-02 — BCP Testing
+The BCP is tested annually through a tabletop exercise. The most recent exercise was
+conducted in March 2025 and covered scenarios including extended outage of the primary
+cloud provider. All recovery time objectives (RTOs) were met during the exercise.
+
+---
+
+END OF SYNTHETIC TEST DOCUMENT

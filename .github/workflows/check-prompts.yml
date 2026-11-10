@@ -1,0 +1,44 @@
+# Reusable workflow: fail a PR when an untrusted document reaches an LLM prompt unguarded.
+#
+# In any SAAF repo, add .github/workflows/data-not-instructions.yml:
+#
+#   on: [pull_request]
+#   permissions:
+#     contents: read
+#   jobs:
+#     guard:
+#       uses: SAAF-Project/data-not-instructions/.github/workflows/check-prompts.yml@main
+#       with:
+#         paths: "."          # optional: directories to scan
+#
+name: check-prompts
+
+on:
+  workflow_call:
+    inputs:
+      paths:
+        description: Space-separated paths to scan
+        type: string
+        default: "."
+
+permissions:
+  contents: read
+
+jobs:
+  check-prompts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out caller repo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Check out guard
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: SAAF-Project/data-not-instructions
+          path: .dni
+          persist-credentials: false
+      - name: Scan for unguarded prompts
+        env:
+          SCAN_PATHS: ${{ inputs.paths }}
+        run: python3 .dni/check_prompts.py $SCAN_PATHS

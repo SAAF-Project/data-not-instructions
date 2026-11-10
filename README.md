@@ -4,6 +4,23 @@
 
 Built by team **rm -rf trust** for SAAF Security Challenge #10 (10 November 2026).
 
+*My name is Jev*
+
+```sh
+uv run https://raw.githubusercontent.com/SAAF-Project/data-not-instructions/main/jev_judge.py FILE
+
+./jev_judge.py FILE [FILE...]      # verdict per file (shebang uses uv)
+./jev_judge.py --eval              # score every tests/fixtures/*.txt
+uv run jev_judge.py FILE [FILE...] # same, without the executable bit
+python jev_judge.py FILE [FILE...] # plain Python 3.14+, stdlib only
+
+# A remote run has no ``tests/fixtures`` or ``.env`` beside it: pass files and
+# set ``JEV`` or ``TYPESAFE_API_KEY`` in the environment; ``--eval`` won't work.
+#
+# API key: ``JEV`` or ``TYPESAFE_API_KEY`` from the environment or ``.env``.
+# Stdlib only. A failed API call raises; it is never read as "clean".
+```
+
 It has three parts, which you can use together or separately:
 
 | Part                    | What it does                                                                                                                                                                                                                     | File                                                                                               |

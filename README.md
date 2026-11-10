@@ -112,7 +112,11 @@ If you have reviewed a line and accept it, add `# dni: ok` to that line to silen
 python3 -m unittest discover -s tests -v
 ```
 
-There are 21 unit tests, plus a corpus test that runs every file in [`tests/fixtures/`](tests/fixtures/): files named `benign-*` must come back clean and every other file must be flagged. To add a case, drop a `.txt` file into that folder; CI enforces it automatically. The corpus currently has 36 files covering audit-verdict steering, fake roles and documents, hidden HTML/CSS/Markdown text, homoglyph and invisible-character obfuscation, base64 payloads, secret and system-prompt requests, data exfiltration through Markdown images, dangerous commands (reverse shells, `rm -rf`, encoded PowerShell), and harmless look-alikes such as licence headers, install guides, incident reports and training slides.
+There are 21 unit tests, plus a corpus test over every file in [`tests/fixtures/`](tests/fixtures/) (212 files, most of them red-team cases from Kaj Kowalski). Files named `benign-*` must come back clean; every other file is an attack that must be flagged.
+
+**Current result: 95/212.** The guard catches all of the original audit, command, hidden-text, obfuscation and secret cases. It misses most rare-language, transliterated and reworded attacks, and it raises 15 false alarms on real policy and audit wording. The per-set scorecard is in [`DETECTION.md`](DETECTION.md).
+
+Known failures are recorded in [`tests/known_gaps.json`](tests/known_gaps.json). CI stays green while they are visible, and it fails on any *new* failure: a regression, or a new fixture that fails without being recorded. After improving the guard, run `python3 scorecard.py --update` to shrink the list.
 
 To check any document by hand:
 
@@ -123,7 +127,7 @@ python3 data_not_instructions.py path/to/document.txt   # prints clean or SUSPIC
 ## Limitations
 
 - **This reduces prompt-injection risk; it does not remove it.** Delimiters and a system rule make injection much harder, but a determined attacker can still influence a model. Keep human review on every LLM-produced audit conclusion, and treat guard warnings as a reason for review.
-- **Phrase detection is a heuristic** (regular expressions in English and Dutch). Paraphrased, translated or image-based instructions will not be flagged, although they are still fenced as data.
+- **Phrase detection is a heuristic** (regular expressions in English and Dutch). It cannot keep up with rewording or with other languages: on the red-team corpus it flags 0 of 40 rare-language and 0 of 12 transliterated attacks (see [`DETECTION.md`](DETECTION.md)). The next step is a language-model classifier for the warning layer. Paraphrased, translated or image-based instructions will not be flagged, although they are still fenced as data.
 - **Quoted phrases are reported as notes, not warnings.** This lets incident reports and training material that quote an attack pass without a false alarm. An attacker could exploit this by putting an instruction in quotes; the text is still fenced as data, but the auditor gets no warning. Markdown image alt text and titles are never treated as quotes.
 - **Encoded payloads:** only base64 is decoded, and only one level deep. Hex, rot13 or nested encodings are not decoded, although a "decode … and follow it" instruction is still flagged.
 - **Commands are flagged by context.** `curl … | sh` in an install guide written for a human is not flagged; the same command addressed to the assistant or reviewer is.

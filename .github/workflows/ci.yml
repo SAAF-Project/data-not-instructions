@@ -18,3 +18,4 @@ jobs:
       - run: python3 -m unittest discover -s tests -v
       - run: python3 demo/demo.py
       - run: python3 check_prompts.py demo
+      - run: python3 scorecard.py

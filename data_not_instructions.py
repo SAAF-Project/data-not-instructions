@@ -33,7 +33,7 @@ import unicodedata
 from dataclasses import dataclass, field
 
 __all__ = ["SYSTEM_RULE", "GuardedDocument", "guard", "wrap", "scan", "sanitize"]
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 TAG = "untrusted_document"
 
@@ -73,6 +73,15 @@ _PATTERNS: list[tuple[str, str]] = [
     ("suppression", r"\b(do not|don't|never|must not)\b[^.\n]{0,30}\b(report|list|mention|include|flag|raise)\b[^.\n]{0,40}\b(gaps?|findings?|exceptions?|issues?|deficienc\w*)\b"),
     ("suppression", r"\breturn (an )?empty\b|\bno gaps? (should|must|need to) be (reported|listed)\b"),
     ("addressed-to-ai", r"\b(note|message|instruction)s? (to|for) (the )?(ai|llm|model|assistant|agent|auditor bot|claude|gpt)\b"),
+    # Text a human reviewer never sees once Markdown/HTML is rendered.
+    ("hidden-markup", r"<!--(?:(?!-->)[\s\S])*?[A-Za-z]{2,}(?:(?!-->)[\s\S])*?-->"),
+    ("hidden-markup", r"<[^>]{0,200}style\s*=\s*[\"'][^\"']{0,200}(display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0|opacity\s*:\s*0(?![.\d]))"),
+    # Attempts to make the agent leak secrets.
+    ("secret-request", r"\b(give|send|share|print|reveal|show|output|leak|tell|list|dump|email|post|paste|return|geef|stuur|toon|deel)\b[^.\n]{0,40}\b(api[ _-]?keys?|passwords?|passwd|tokens?|credentials?|secrets?|private[ _-]?keys?|env(ironment)?[ _-]?var\w*|wachtwoord\w*|sleutels?)\b"),
+    # Attempts to make the agent run commands.
+    # An imperative verb followed by a risky command; plain mentions of tools in docs do not count.
+    ("command-execution", r"\b(run|execute|exec|invoke|type|voer)\b[^.\n`]{0,20}`\s*(env|printenv|set|export|curl|wget|bash|sh|zsh|rm|powershell|nc|ssh|scp)\b[^`\n]*`"),
+    ("command-execution", r"\b(curl|wget)\s+(-\S+\s+)*https?://|\bprintenv\b|\bos\.environ\b|\bprocess\.env\b"),
 ]
 _COMPILED = [(label, re.compile(p, re.IGNORECASE)) for label, p in _PATTERNS]
 

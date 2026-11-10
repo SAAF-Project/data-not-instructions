@@ -8,7 +8,7 @@ It has three parts, which you can use together or separately:
 
 | Part | What it does | File |
 |---|---|---|
-| **Guard** (library) | Wraps untrusted text in nonce-tagged tags, removes hidden characters, neutralises tag-escape attempts and flags injection phrases (English and Dutch) | [`data_not_instructions.py`](data_not_instructions.py) |
+| **Guard** (library) | Wraps untrusted text in nonce-tagged tags, removes hidden characters, neutralises tag-escape attempts and flags injection phrases (English and Dutch), including hidden HTML comments, requests for secrets, and commands to run | [`data_not_instructions.py`](data_not_instructions.py) |
 | **Skill** (Claude Code) | Tells an agent working in any SAAF repo to route every document through the guard | [`.claude/skills/data-not-instructions/SKILL.md`](.claude/skills/data-not-instructions/SKILL.md) |
 | **CI check** | Fails a PR when an LLM prompt interpolates a document variable without the guard | [`check_prompts.py`](check_prompts.py), [`check-prompts.yml`](.github/workflows/check-prompts.yml) |
 
@@ -112,7 +112,13 @@ If you have reviewed a line and accept it, add `# dni: ok` to that line to silen
 python3 -m unittest discover -s tests -v
 ```
 
-There are 14 tests. They cover nonce tags, fake closing tags, invisible characters, Dutch phrases, the poisoned and clean demo files, and the CI checker.
+There are 18 tests. They cover nonce tags, fake closing tags, invisible characters, Dutch phrases, hidden HTML comments, requests for secrets, commands to run, false positives on normal audit and README wording, the poisoned and clean demo files, and the CI checker.
+
+To check any document by hand:
+
+```bash
+python3 data_not_instructions.py path/to/document.txt   # prints clean or SUSPICIOUS with warnings; exit code 1 if suspicious
+```
 
 ## Limitations
 

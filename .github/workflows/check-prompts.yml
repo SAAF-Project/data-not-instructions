@@ -39,8 +39,8 @@ permissions:
   contents: read
 
 env:
-  # Scripts are stdlib-only, so `uv run` fetches and runs them straight from this repo.
-  DNI: https://raw.githubusercontent.com/SAAF-Project/data-not-instructions/main
+  # This repo is private, so raw URLs need auth: check it out next to the caller's code instead.
+  DNI: .data-not-instructions
 
 jobs:
   check-prompts:
@@ -49,6 +49,12 @@ jobs:
       - name: Check out caller repo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
+      - name: Check out data-not-instructions scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: SAAF-Project/data-not-instructions
+          path: ${{ env.DNI }}
           persist-credentials: false
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       - name: Scan for unguarded prompts

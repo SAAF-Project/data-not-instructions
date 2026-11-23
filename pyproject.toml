@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "data-not-instructions"
+version = "0.3.0"
+description = "Offline untrusted-document wrapping and prompt-boundary heuristics"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+license = {file = "LICENSE"}
+
+[tool.setuptools]
+py-modules = ["data_not_instructions", "check_prompts", "jev_judge"]

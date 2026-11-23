@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: SAAF-Project/data-not-instructions
-          ref: 7871889ad02f35e501dc9dcfe8d3bb65efffde18
+          ref: a770aadafa8ea68639cc17048713fb4a1329c7a0
           path: checker
           persist-credentials: false
       - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0

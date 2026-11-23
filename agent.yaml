@@ -1,0 +1,30 @@
+# Descriptive metadata; this mandate is not a runtime permission engine.
+name: Data, Not Instructions
+repo: SAAF-Project/data-not-instructions
+island: foundation
+maturity: building
+confirmed: false
+category: Security tooling
+language: Python
+description: Wrap outside evidence as untrusted text and report heuristic prompt-injection warnings for human review.
+tags: [prompt-injection, untrusted-data, human-review]
+depends_on: []
+mandate:
+  purpose: Preserve the boundary between audit evidence and task instructions, with explicit scan errors and visible detector limitations.
+  allowed_tools: [read_selected_source_files, read_selected_documents, wrap_text, write_console_findings]
+  forbidden_actions:
+    - action: execute_scanned_source_or_document_instructions
+      rationale: Documents and repository source are untrusted data, never execution instructions.
+    - action: send_documents_to_provider_without_approval
+      rationale: Jev and the live demo have separate data-processing, model and cost implications.
+    - action: automatically_change_audit_conclusions
+      rationale: Warnings and model judgements require a reviewer and source validation.
+    - action: change_own_config
+      rationale: Rules, known-gap baselines and suppression policies change through a reviewed PR.
+  trusted_inputs: [reviewed_guard_revision, reviewed_rule_configuration]
+  human_approval_required_for:
+    - sending selected documents to a named model provider under an explicit budget
+    - accepting or suppressing findings
+    - changing known-gap baselines or wrapper integration
+    - using model output in an audit conclusion
+  evidence_policy: cite_only_given_context

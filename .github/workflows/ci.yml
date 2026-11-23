@@ -1,32 +1,26 @@
-name: ci
-
+name: offline CI
 on:
   push:
     branches: [main]
   pull_request:
-
 permissions:
   contents: read
-
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.12']
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - run: python3 -m unittest discover -s tests -v
-      - run: python3 demo/demo.py
-      - run: python3 check_prompts.py demo
-      - run: python3 scorecard.py
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-      - name: Jev scorecard
-        continue-on-error: true
-        env:
-          JEV: ${{ secrets.JEV }}
-        run: |
-          if [ -z "${JEV}" ]; then
-            echo "::notice::JEV secret not available; skipping Jev scorecard"
-            exit 0
-          fi
-          uv run jev_judge.py --eval
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s tests -v
+      - run: python demo/demo.py
+      - run: python check_prompts.py demo
+      - run: python scorecard.py

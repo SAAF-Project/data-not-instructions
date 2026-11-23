@@ -30,6 +30,7 @@ Stdlib only. A failed API call raises; it is never read as "clean".
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 import urllib.error
@@ -76,7 +77,12 @@ class Judgement:
 
 
 def decide(n: dict[str, float]) -> Verdict:
-    """Truth table over the Noul probabilities."""
+    """Truth table over a complete set of finite Noul probabilities."""
+    if set(n) != set(QUESTIONS):
+        raise ValueError("incomplete or unexpected Jev probability keys")
+    if any(isinstance(value, bool) or not isinstance(value, (int, float))
+           or not math.isfinite(value) or not 0 <= value <= 1 for value in n.values()):
+        raise ValueError("Jev probabilities must be finite numbers between zero and one")
     if n["quoted"] > YES:  # an incident report / training slide quoting an attack
         return Verdict.CLEAN
     top = max(n[k] for k in ATTACKS)
@@ -129,11 +135,15 @@ def judge(text: str, key: str | None = None) -> Judgement:
         raise RuntimeError(
             f"TypeSafe API {e.code}: {e.read().decode('utf-8', 'replace')[:300]}"
         ) from e
+    if any(isinstance(answers[qid]["noul"], bool) for qid in QUESTIONS):
+        raise ValueError("Jev probability cannot be a boolean")
     nouls = {qid: float(answers[qid]["noul"]) for qid in QUESTIONS}
     return Judgement(decide(nouls), nouls)
 
 
 def _evaluate(files: list[Path]) -> int:
+    if not files:
+        raise ValueError("no evaluation fixtures: not assessed")
     key = _api_key()
     with ThreadPoolExecutor(8) as pool:
         results = list(
@@ -161,6 +171,9 @@ def _evaluate(files: list[Path]) -> int:
 
 
 def main(argv: list[str]) -> int:
+    if not argv:
+        print("usage: jev_judge.py FILE [FILE...] or --eval; no input assessed", file=sys.stderr)
+        return 2
     if argv[:1] == ["--eval"]:
         return _evaluate(
             sorted(Path(__file__).with_name("tests").joinpath("fixtures").glob("*.txt"))

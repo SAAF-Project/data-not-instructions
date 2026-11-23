@@ -74,6 +74,18 @@ class ScanFailureTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertNotIn('RuntimeError:', result.stderr)
 
+    def test_workflow_does_not_resolve_internal_symlinks_into_passes(self):
+        folder = self.root / 'source'
+        folder.mkdir()
+        (folder / 'agent.py').write_text('pass')
+        (self.root / 'link.py').symlink_to(folder / 'agent.py')
+        (self.root / 'linked-folder').symlink_to(folder, target_is_directory=True)
+        for target in ['link.py', 'linked-folder/agent.py']:
+            with self.subTest(target=target), self.assertRaises(ValueError):
+                run_check.targets(self.root, target)
+            result = subprocess.run([sys.executable, '-I', run_check.__file__, str(self.root), target], capture_output=True)
+            self.assertEqual(result.returncode, 2)
+
 
 class JudgeValidationTests(unittest.TestCase):
     def clean(self):

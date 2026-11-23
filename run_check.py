@@ -20,6 +20,11 @@ def targets(checkout, paths):
             target.relative_to(root)
         except ValueError as exc:
             raise ValueError('scan target escapes caller checkout') from exc
+        component = root
+        for part in relative.parts:
+            component = component / part
+            if component.is_symlink():
+                raise ValueError('symlink scan targets are not assessed')
         resolved.append(str(target))
     return resolved
 

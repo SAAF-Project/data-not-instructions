@@ -1,89 +1,51 @@
-# Reusable workflow: fail a PR when an untrusted document reaches an LLM prompt unguarded,
-# and (optionally) have Jev judge sample documents for prompt injection.
-#
-# In any SAAF repo, add .github/workflows/data-not-instructions.yml:
-#
-#   on: [pull_request]
-#   permissions:
-#     contents: read
-#   jobs:
-#     guard:
-#       uses: SAAF-Project/data-not-instructions/.github/workflows/check-prompts.yml@main
-#       with:
-#         paths: "."                        # optional: directories to scan
-#         documents: "samples/**/*.txt"     # optional: files for Jev to judge
-#       secrets:
-#         JEV: ${{ secrets.JEV }}           # TypeSafe API key; without it Jev is skipped
-#
-# The Jev step runs only when both `documents` and the secret are set. It fails
-# the job when any document is judged "injection" or "review".
+# Offline reusable check. Provider evaluations are a separate authorised operation.
 name: check-prompts
-
 on:
   workflow_call:
     inputs:
       paths:
-        description: Space-separated paths to scan
+        description: Relative source paths (shell-style quoting allows spaces)
         type: string
-        default: "."
+        default: '.'
       documents:
-        description: Space-separated files or globs (bash globstar) for Jev to judge
+        description: Legacy provider input; nonempty values are rejected, never skipped as passed
         type: string
-        default: ""
+        default: ''
     secrets:
       JEV:
-        description: TypeSafe API key; enables the Jev judge
+        description: Legacy compatibility parameter, never exposed to any offline step
         required: false
-
 permissions:
   contents: read
-
-env:
-  # This repo is private, so raw URLs need auth: check it out next to the caller's code instead.
-  DNI: .data-not-instructions
-
 jobs:
   check-prompts:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - name: Check out caller repo
+      - name: Require a separate provider evaluation
+        env:
+          REQUESTED_DOCUMENTS: ${{ inputs.documents }}
+        run: |
+          if [ -n "$REQUESTED_DOCUMENTS" ]; then
+            echo 'Provider evaluation is NOT ASSESSED here. Run it separately with approved data and budget.' >&2
+            exit 2
+          fi
+      - name: Check out caller source as data
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          path: caller
           persist-credentials: false
-      - name: Check out data-not-instructions scripts
+      - name: Check out the reviewed checker
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: SAAF-Project/data-not-instructions
-          path: ${{ env.DNI }}
+          ref: 7871889ad02f35e501dc9dcfe8d3bb65efffde18
+          path: checker
           persist-credentials: false
-      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
-      - name: Scan for unguarded prompts
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: '3.12'
+      - name: Scan with isolated Python and a caller path boundary
         env:
           SCAN_PATHS: ${{ inputs.paths }}
-        shell: bash
-        run: |
-          read -ra paths <<< "${SCAN_PATHS}"
-          uv run "${DNI}/check_prompts.py" "${paths[@]}"
-      - name: Judge documents with Jev
-        if: ${{ inputs.documents != '' }}
-        env:
-          DOCUMENTS: ${{ inputs.documents }}
-          JEV: ${{ secrets.JEV }}
-        shell: bash
-        run: |
-          if [ -z "${JEV}" ]; then
-            echo "::notice::JEV secret not set; skipping Jev judge"
-            exit 0
-          fi
-          shopt -s globstar
-          read -ra patterns <<< "${DOCUMENTS}"
-          files=()
-          for p in "${patterns[@]}"; do
-            mapfile -t matched < <(compgen -G "${p}")
-            files+=("${matched[@]}")
-          done
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "::error::documents matched no files: ${DOCUMENTS}"
-            exit 1
-          fi
-          uv run "${DNI}/jev_judge.py" "${files[@]}"
+        run: python -I checker/run_check.py caller "$SCAN_PATHS"

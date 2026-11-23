@@ -1,6 +1,9 @@
 # Dependencies and execution scope
 
 The guard, static checker, scorecard and unit tests use Python's standard library.
+The separate Living Map manifest job uses hash-locked PyYAML 6.0.2 from
+`requirements-dev.txt` with the existing validator pinned at
+`068ad51d476ae7090cd4abb8bf395be82e4b2f90`.
 Direct `python3` execution installs nothing. `pyproject.toml` records the current
 0.3.0 library version, the existing MIT licence and an optional setuptools build;
 setuptools is a build dependency, not a runtime requirement. CI verifies Python

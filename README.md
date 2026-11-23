@@ -71,7 +71,7 @@ permissions:
   contents: read
 jobs:
   guard:
-    uses: SAAF-Project/data-not-instructions/.github/workflows/check-prompts.yml@8664ab251ff2c3cb5424e357ea4c839d0505ea27
+    uses: SAAF-Project/data-not-instructions/.github/workflows/check-prompts.yml@34b0fdd358084ddb39a617720ad0d59df829ab81
 ```
 
 The workflow keeps caller source and the pinned checker in separate checkouts,
